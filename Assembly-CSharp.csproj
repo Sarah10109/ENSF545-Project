@@ -51,6 +51,10 @@
      <Compile Include="Assets\OpenHaptics\HapticScripts\HapticPlugin.cs" />
      <Compile Include="Assets\OpenHaptics\HapticScripts\HapticPluginSafetyScript.cs" />
      <Compile Include="Assets\OpenHaptics\HapticScripts\HapticSurface.cs" />
+     <Compile Include="Assets\Scripts\BoxGrabController.cs" />
+     <Compile Include="Assets\Scripts\CursorController.cs" />
+     <Compile Include="Assets\Scripts\InputManager.cs" />
+     <Compile Include="Assets\Scripts\TrialManager.cs" />
     <Reference Include="UnityEngine">
         <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.28f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>
