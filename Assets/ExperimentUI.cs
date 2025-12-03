@@ -13,15 +13,15 @@ public class ExperimentUI : MonoBehaviour
         if (experimentManager == null || statusText == null)
             return;
 
-        if (!experimentManager.ExperimentRunning)
-        {
-            statusText.text = "Press S to start (6 Normal, then 6 Heavy)";
-            return;
-        }
-
         string cond = experimentManager.CurrentConditionName;
         int trial = experimentManager.CurrentTrialNumber;
         int total = experimentManager.TrialsPerCondition;
+
+        if (!experimentManager.ExperimentRunning)
+        {
+            statusText.text = $"Press S to start ({total} Normal, then {total} Heavy)";
+            return;
+        }
 
         statusText.text = $"Mode: {cond}    Trial: {trial}/{total}";
     }
