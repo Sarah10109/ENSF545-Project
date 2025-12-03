@@ -20,7 +20,9 @@ public class LiftableBox : MonoBehaviour
     public bool TrialActive    { get; private set; }
     public bool TrialCompleted { get; private set; }
 
+    public int FailureDrops { get; private set; }
     private float trialStartTime;
+    
 
     private void Awake()
     {
@@ -39,6 +41,8 @@ public class LiftableBox : MonoBehaviour
         }
 
         baseMass = rb.mass;
+
+        FailureDrops = 0;
     }
 
     public void StartTrial(string newConditionName, float massScale)
@@ -90,11 +94,23 @@ public class LiftableBox : MonoBehaviour
                 conditionName,
                 massMultiplier,
                 trialTime,
-                score
+                score,
+                FailureDrops
             );
         }
 
         Debug.Log($"[LiftableBox] Trial COMPLETE. cond={conditionName}, time={trialTime:F3}s, score={score:F2}");
+
+        FailureDrops = 0;
+    }
+
+    public void RegisterFailureDrop()
+    {
+        if (!TrialActive)
+            return;
+
+        FailureDrops++;
+        Debug.Log($"[LiftableBox] Failure drop registered. Total drops: {FailureDrops}");
     }
 
     public void ResetToBaseline()
@@ -106,6 +122,7 @@ public class LiftableBox : MonoBehaviour
         rb.mass = baseMass;
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
+        FailureDrops = 0;
         if (meshRenderer != null)
         {
             if (normalMaterial != null)

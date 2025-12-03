@@ -28,24 +28,25 @@ public class TrialLogger : MonoBehaviour
 
         if (!File.Exists(filePath))
         {
-            string header = "Timestamp,Participant,Condition,MassMultiplier,LiftTimeSeconds,Score\n";
+            string header = "Timestamp,Participant,Condition,MassMultiplier,LiftTimeSeconds,Score,FailureDrops\n";
             File.WriteAllText(filePath, header);
         }
 
         Debug.Log("[TrialLogger] Logging to: " + filePath);
     }
 
-    public void LogTrial(string participantId, string conditionName, float massMultiplier, float liftTimeSeconds, float score = 0.5f)
+    public void LogTrial(string participantId, string conditionName, float massMultiplier, float liftTimeSeconds, float score = 0.5f, int failureDrops = 0)
     {
         string timestamp = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         string line = string.Format(
-            "{0},{1},{2},{3},{4:F3},{5:F2}\n",
+            "{0},{1},{2},{3},{4:F3},{5},{6}\n",
             timestamp,
             participantId,
             conditionName,
             massMultiplier.ToString("F2"),
             liftTimeSeconds,
-            score
+            score,
+            failureDrops
         );
 
         File.AppendAllText(filePath, line);

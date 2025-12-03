@@ -19,10 +19,8 @@ public class ExperimentManager : MonoBehaviour
     public TargetFloorDetector targetFloorDetector;
 
     [Header("Auto fail / restart")]
-    [Tooltip("Automatically restart the current trial if the cube falls below this Y position (set to a large negative value to disable).")]
     public float fallResetHeight = -5f;
 
-    [Tooltip("Minimum time (seconds) between auto-restarts, to avoid multiple triggers while the cube is still below the threshold).")]
     public float autoRestartCooldown = 1.0f;
 
     private enum Phase { None, Normal, Heavy }
@@ -32,7 +30,6 @@ public class ExperimentManager : MonoBehaviour
     private bool experimentRunning = false;
     private float lastAutoRestartTime = -999f;
 
-    // ---- Public info for UI ----
     public string CurrentConditionName { get; private set; } = "";
     public int CurrentTrialNumber    => currentTrialIndex + 1;   // 1-based for display
     public int TrialsPerCondition    => trialsPerCondition;
@@ -116,6 +113,9 @@ public class ExperimentManager : MonoBehaviour
 
         lastAutoRestartTime = Time.time;
         Debug.LogWarning("[ExperimentManager] Trial auto-restarted because the cube fell below the threshold.");
+
+        liftableBox.RegisterFailureDrop();
+        
         RestartCurrentTrial();
     }
 
