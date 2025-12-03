@@ -92,7 +92,7 @@ public class ExperimentManager : MonoBehaviour
         float massScale = (currentPhase == Phase.Heavy) ? heavyMassScale : normalMassScale;
         string condName = (currentPhase == Phase.Heavy) ? "Heavy" : "Normal";
 
-        liftableBox.StartTrial(condName, massScale);
+        liftableBox.StartTrial(condName, massScale, true);
 
         Debug.Log($"[ExperimentManager] Trial {CurrentTrialNumber}/{trialsPerCondition} in {condName} started.");
     }
@@ -127,7 +127,7 @@ public class ExperimentManager : MonoBehaviour
         float massScale = (currentPhase == Phase.Heavy) ? heavyMassScale : normalMassScale;
         string condName = (currentPhase == Phase.Heavy) ? "Heavy" : "Normal";
 
-        liftableBox.StartTrial(condName, massScale);
+        liftableBox.StartTrial(condName, massScale, false);
     }
 
     private void OnTrialFinished()

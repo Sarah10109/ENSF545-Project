@@ -45,7 +45,7 @@ public class LiftableBox : MonoBehaviour
         FailureDrops = 0;
     }
 
-    public void StartTrial(string newConditionName, float massScale)
+    public void StartTrial(string newConditionName, float massScale, bool resetTime = true)
     {
         conditionName = newConditionName;
         massMultiplier = massScale;
@@ -53,6 +53,9 @@ public class LiftableBox : MonoBehaviour
         TrialActive = true;
         TrialCompleted = false;
         trialStartTime = Time.time;
+
+        if (resetTime)  trialStartTime = Time.time;
+
 
         rb.mass = baseMass * massMultiplier;
         rb.velocity = Vector3.zero;
