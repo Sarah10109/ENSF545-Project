@@ -17,7 +17,7 @@ public class TargetFloorDetector : MonoBehaviour
 
     public Transform floorCenter;
 
-    public Vector3 floorOffset = Vector3.zero;
+    public Vector3 floorOffset = new Vector3(10f, 0.01f, 0f);
 
     public bool preserveTargetHeight = false;
 
