@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -28,23 +28,24 @@ public class TrialLogger : MonoBehaviour
 
         if (!File.Exists(filePath))
         {
-            string header = "Timestamp,Participant,Condition,MassMultiplier,LiftTimeSeconds\n";
+            string header = "Timestamp,Participant,Condition,MassMultiplier,LiftTimeSeconds,Score\n";
             File.WriteAllText(filePath, header);
         }
 
         Debug.Log("[TrialLogger] Logging to: " + filePath);
     }
 
-    public void LogTrial(string participantId, string conditionName, float massMultiplier, float liftTimeSeconds)
+    public void LogTrial(string participantId, string conditionName, float massMultiplier, float liftTimeSeconds, float score = 0.5f)
     {
         string timestamp = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         string line = string.Format(
-            "{0},{1},{2},{3},{4:F3}\n",
+            "{0},{1},{2},{3},{4:F3},{5:F2}\n",
             timestamp,
             participantId,
             conditionName,
             massMultiplier.ToString("F2"),
-            liftTimeSeconds
+            liftTimeSeconds,
+            score
         );
 
         File.AppendAllText(filePath, line);

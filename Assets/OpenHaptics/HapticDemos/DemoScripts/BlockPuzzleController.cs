@@ -22,6 +22,12 @@ public class BlockPuzzleController : MonoBehaviour {
         initialRotation = ToyBlock.transform.rotation;
     }
 
+    // Get the starting position of the box (for target randomization)
+    public Vector3 GetBoxStartPosition()
+    {
+        return initialPosition;
+    }
+
 	// Return the blocks to their original position.
     public void ResetBlocks()
     {

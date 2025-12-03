@@ -15,11 +15,22 @@ public class ExperimentManager : MonoBehaviour
     [Header("Trials")]
     public int trialsPerCondition = 6;
 
+    [Header("Environment references")]
+    public TargetFloorDetector targetFloorDetector;
+
+    [Header("Auto fail / restart")]
+    [Tooltip("Automatically restart the current trial if the cube falls below this Y position (set to a large negative value to disable).")]
+    public float fallResetHeight = -5f;
+
+    [Tooltip("Minimum time (seconds) between auto-restarts, to avoid multiple triggers while the cube is still below the threshold).")]
+    public float autoRestartCooldown = 1.0f;
+
     private enum Phase { None, Normal, Heavy }
     private Phase currentPhase = Phase.None;
 
     private int currentTrialIndex = 0;   // 0-based
     private bool experimentRunning = false;
+    private float lastAutoRestartTime = -999f;
 
     // ---- Public info for UI ----
     public string CurrentConditionName { get; private set; } = "";
@@ -51,11 +62,16 @@ public class ExperimentManager : MonoBehaviour
             {
                 OnTrialFinished();
             }
+            else if (liftableBox.TrialActive)
+            {
+                CheckForAutoRestart();
+            }
         }
     }
 
     private void StartFullExperiment()
     {
+        ResetEnvironmentToBaseline(true);
         experimentRunning = true;
         StartCondition(Phase.Normal);
     }
@@ -84,6 +100,36 @@ public class ExperimentManager : MonoBehaviour
         Debug.Log($"[ExperimentManager] Trial {CurrentTrialNumber}/{trialsPerCondition} in {condName} started.");
     }
 
+    private void CheckForAutoRestart()
+    {
+        if (fallResetHeight >= 9000f) // sentinel for disabled
+            return;
+
+        if (liftableBox == null)
+            return;
+
+        if (liftableBox.transform.position.y > fallResetHeight)
+            return;
+
+        if (Time.time - lastAutoRestartTime < autoRestartCooldown)
+            return;
+
+        lastAutoRestartTime = Time.time;
+        Debug.LogWarning("[ExperimentManager] Trial auto-restarted because the cube fell below the threshold.");
+        RestartCurrentTrial();
+    }
+
+    private void RestartCurrentTrial()
+    {
+        if (blockPuzzleController != null)
+            blockPuzzleController.ResetBlocks();
+
+        float massScale = (currentPhase == Phase.Heavy) ? heavyMassScale : normalMassScale;
+        string condName = (currentPhase == Phase.Heavy) ? "Heavy" : "Normal";
+
+        liftableBox.StartTrial(condName, massScale);
+    }
+
     private void OnTrialFinished()
     {
         currentTrialIndex++;
@@ -109,7 +155,20 @@ public class ExperimentManager : MonoBehaviour
                 experimentRunning = false;
                 currentPhase = Phase.None;
                 CurrentConditionName = "";
+                ResetEnvironmentToBaseline(true);
             }
         }
+    }
+
+    private void ResetEnvironmentToBaseline(bool resetTargetPosition)
+    {
+        if (blockPuzzleController != null)
+            blockPuzzleController.ResetBlocks();
+
+        if (liftableBox != null)
+            liftableBox.ResetToBaseline();
+
+        if (resetTargetPosition && targetFloorDetector != null)
+            targetFloorDetector.ResetTargetToStart();
     }
 }
